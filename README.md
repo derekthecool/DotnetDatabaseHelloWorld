@@ -51,7 +51,7 @@ cat ./WebApi/WebApi.csproj
 #    app.UseAuthorization();
 ```
 
-# Lastly, verify the web API works
+Lastly, verify the web API works
 
 ```sh
 dotnet run
@@ -78,3 +78,31 @@ View the web API with Swagger/Open API by going to a modified version of the
 second localhost listed in the dotnet run output. So in this case:
 
 http://localhost:5149/swagger/index.html
+
+### Customize ClassLibrary Project
+
+- Delete Class1.cs
+- Add required [NuGet](https://www.nuget.org/) packages using dotnet cli
+```sh
+cd ClassLibrary
+
+# Database ORM (object relational mapper)
+dotnet add package Dapper
+
+# Required for dapper to "talk" to mysql or mariadb databases
+dotnet add package MySqlConnector
+
+# Needed to reed the appSettings.json file from a non asp.net project
+dotnet add package Microsoft.Extensions.Configuration.Abstractions
+```
+- Create the database access classes in ./ClassLibrary/DataAccess:
+    - ISqlDataAccess.cs interface
+    - SqlDataAccess.cs implementation
+- Create the model classes to match database tables in ./ClassLibrary/Data:
+    - Names will be decided on your database setup
+
+### Customize WebApi Project
+
+- Delete Controllers directory
+- Edit Program.cs:
+    - Add services for Sql access interface and any other interfaces
