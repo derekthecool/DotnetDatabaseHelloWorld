@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using System.Data;
 using Dapper;
 
-namespace DataAccess.DbAccess;
+namespace ClassLibrary.DbAccess;
 
 public class SqlDataAccess : ISqlDataAccess
 {
@@ -30,12 +30,12 @@ public class SqlDataAccess : ISqlDataAccess
         );
     }
 
-    public async Task SaveData<T>(string sqlCommand, T parameters, string connectionId = "Default")
+    public async Task<int> SaveData<T>(string sqlCommand, T parameters, string connectionId = "Default")
     {
         string connectionString = _config.GetConnectionString(connectionId);
         using IDbConnection connection = new MySqlConnection(connectionString);
 
-        await connection.ExecuteAsync(sqlCommand, parameters, commandType: CommandType.Text);
+        return await connection.ExecuteAsync(sqlCommand, parameters, commandType: CommandType.Text);
     }
 }
 

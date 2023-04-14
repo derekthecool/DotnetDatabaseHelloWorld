@@ -1,0 +1,28 @@
+services:
+  web_api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - '8080:80'
+    depends_on:
+      - db
+  db:
+    image: mariadb
+    restart: unless-stopped
+    # ports:
+      # Open this port to access using local mysql client
+      # docker compose applications can just use the internal network name of mysql
+      # Use this port to debug mysql access remotely
+      # - 8081:3306
+    environment:
+      MARIADB_ROOT_PASSWORD: password1234
+    volumes:
+      # This volume is for initial database setup to create database and tables
+      - ./database_init:/docker-entrypoint-initdb.d
+  adminer:
+    image: adminer
+    restart: unless-stopped
+    ports:
+      - 8082:8080

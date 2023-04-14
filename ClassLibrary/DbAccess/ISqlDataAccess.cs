@@ -1,4 +1,4 @@
-namespace DataAccess.DbAccess;
+namespace ClassLibrary.DbAccess;
 
 public interface ISqlDataAccess
 {
@@ -8,5 +8,5 @@ public interface ISqlDataAccess
         string connectionId = "Default"
     );
 
-    Task SaveData<T>(string sqlCommand, T parameters, string connectionId = "Default");
+    Task<int> SaveData<T>(string sqlCommand, T parameters, string connectionId = "Default");
 }
