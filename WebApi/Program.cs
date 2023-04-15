@@ -10,6 +10,10 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<ISqlDataAccess, SqlDataAccess>();
 
+// builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
+// builder.Services.AddControllersWithViews().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
+// builder.Services.AddMvc().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.
+
 var app = builder.Build();
 
 // Awesome API debug tool
@@ -46,6 +50,7 @@ async Task<IResult> GetAll()
 
 async Task<IResult> InsertSingle(Animal animal)
 {
+    // return Results.Ok(animal);
     var linesChanged = await command.InsertSingle(animal);
     return Results.Ok($"Lines changed: {linesChanged}");
 }

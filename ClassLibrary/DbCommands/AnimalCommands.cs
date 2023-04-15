@@ -15,13 +15,13 @@ public class AnimalCommands
     // Create (Crud) a single new item in database
     public async Task<int> InsertSingle(Animal animal)
     {
-        return await _db.SaveData<Animal>("insert into Animal.Animals values (@Name, @LegCount)", animal);
+        return await _db.SaveData<Animal>("insert into Animal.Animals (Name, LegCount) values (@Name, @LegCount)", animal);
     }
 
     // Create (Crud) many items into database
     public async Task<int> InsertMany(IEnumerable<Animal> animals)
     {
-        return await _db.SaveData("insert into Animal.Animals values (@Name, @LegCount)", animals);
+        return await _db.SaveData("insert into Animal.Animals (Name, LegCount) values (@Name, @LegCount)", animals);
     }
 
     // Read (cRud) all items from database
