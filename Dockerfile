@@ -6,9 +6,9 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 
 COPY . /src
 
-RUN ls -la
 WORKDIR /src/WebApi/
-RUN ls -la
+# RUN dotnet restore --verbosity detailed
+# RUN dotnet restore -c Release
 RUN dotnet build -c Release -o /app
 
 FROM build AS publish

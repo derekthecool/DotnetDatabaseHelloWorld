@@ -4,6 +4,10 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: unless-stopped
+    environment:
+      # Using development asp.net environment variable for access to swagger
+      # web API tool http://localhost:8080/swagger/index.html
+      ASPNETCORE_ENVIRONMENT: Development
     ports:
       - '8080:80'
     depends_on:

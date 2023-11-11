@@ -79,6 +79,9 @@ second localhost listed in the dotnet run output. So in this case:
 
 http://localhost:5149/swagger/index.html
 
+(if already running in docker it should be http://localhost:8080/swagger/index.html)
+assuming the local port is mapped to 8080.
+
 ### Customize ClassLibrary Project
 
 - Delete Class1.cs
@@ -95,14 +98,33 @@ dotnet add package MySqlConnector
 # Needed to reed the appSettings.json file from a non asp.net project
 dotnet add package Microsoft.Extensions.Configuration.Abstractions
 ```
-- Create the database access classes in ./ClassLibrary/DataAccess:
+- Create the database access classes in new directory ./ClassLibrary/DbAccess:
     - ISqlDataAccess.cs interface
     - SqlDataAccess.cs implementation
-- Create the model classes to match database tables in ./ClassLibrary/Data:
-    - Names will be decided on your database setup
+- Create the model classes to match database tables in ./ClassLibrary/Models:
+    - Names will be decided on your database setup. This example uses the
+      Animal.cs file to declare the animal.
+- Create new directory DbCommands for class library commands to be used by the
+  web API. Methods demonstrated in this example project include:
+  - InsertSingle
+  - InsertMany
+  - GetSingle
+  - GetAll
+  - UpdateSingle
+  - DeleteSingle
+  - DeleteAll
+
+  All of these methods will be used in the Program.cs web API file latter.
 
 ### Customize WebApi Project
 
 - Delete Controllers directory
 - Edit Program.cs:
-    - Add services for Sql access interface and any other interfaces
+    - Setup dependency injection (DI) in the WebApi's Program.cs to use the
+      classes for sql access. DI helps because the class library does not need
+      to read the appSettings.json file directly.
+    - Start mapping API endpoints for `Get`, `Post`, `Delete` API calls. These
+      mappings are easy and map    ```cs
+    app.MapGet("/animals/list/single/{index}", GetSingle);
+    app.MapGet("/animals/list/all", GetAll);
+    ```

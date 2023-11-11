@@ -10,10 +10,6 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<ISqlDataAccess, SqlDataAccess>();
 
-// builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
-// builder.Services.AddControllersWithViews().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
-// builder.Services.AddMvc().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.
-
 var app = builder.Build();
 
 // Awesome API debug tool
@@ -22,25 +18,29 @@ app.UseSwaggerUI();
 
 var db = (ISqlDataAccess)app.Services.GetService(typeof(ISqlDataAccess));
 var command = new AnimalCommands(db);
-app.MapGet("/animals/list/single/{index}", GetSingle);
+app.MapGet(
+    "/animals/list/single/{index}",
+    async (int index) =>
+    {
+        Animal animal = await (command.GetSingle(index));
+        if (animal != null)
+        {
+            return Results.Ok(animal);
+        }
+        else
+        {
+            return Results.Problem($"Animal with index {index} not found");
+        }
+    }
+);
+
 app.MapGet("/animals/list/all", GetAll);
 
-// TODO: fix issue with json naming parsing
-app.MapPost("/animals/insert/single", InsertSingle);
-app.MapPost("/animals/insert/many", InsertMany);
+app.MapPut("/animals/insert/single", InsertSingle);
+app.MapPut("/animals/insert/many", InsertMany);
 
-async Task<IResult> GetSingle(int index)
-{
-    Animal animal = await (command.GetSingle(index));
-    if (animal != null)
-    {
-        return Results.Ok(animal);
-    }
-    else
-    {
-        return Results.Problem($"Animal with index {index} not found");
-    }
-}
+// app.MapPut("/test", async (int index) => "test test test");
+
 
 async Task<IResult> GetAll()
 {
